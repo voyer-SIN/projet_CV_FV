@@ -1,0 +1,33 @@
+/* general  */
+
+body{
+    font-family: 'roboto', sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: bold;
+}
+
+/* experience */
+
+ul{
+    list-style: none;
+}
+
+.timeline {
+    padding: 30px 10px;
+    position : relative;
+}
+
+.timeline:before{
+    content: "";
+    top: 0;
+    bottom : 0;
+    position : absolute;
+    content: "";
+    width: 5px;
+    background-color: #333;
+    left: 50%;
+    margin-left: -2.5px;
+
+}
