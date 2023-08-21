@@ -1,3 +1,87 @@
+<?php 
+    $firstname = $name = $email = $message = "";
+    $firstnameError = $nameError = $emailError = $messageError = "";
+    $isSuccess = false;
+    $emailTo = "voyer.lycee@gmail.com";
+
+    if ($_SERVER["REQUEST_METHOD"] == "POST")
+    {
+        $firstname = verifyInput($_POST["firstname"]);
+        $name = verifyInput($_POST["name"]);
+        $email = verifyInput($_POST["email"]);
+        $message = verifyInput($_POST["message"]);
+        $isSuccess = true;
+        $emailText = "";
+
+        if (empty($firstname))
+        {
+            $firstnameError = "Il faut saisir votre prénom ! ";
+            $isSuccess = false;
+        }
+        else
+        {
+            $emailText .= "firstName: $firstname\n";
+        }
+
+        if (empty($name))
+        {
+            $nameError = "Il faut saisir votre nom ! ";
+            $isSuccess = false;
+        }
+        else
+        {
+            $emailText .= "name: $name\n";
+        }
+
+        if (empty($email))
+        {
+            $emailError = "Il faut saisir votre email ! ";
+            $isSuccess = false;
+        }
+        else
+        {
+            $emailText .= "Email: $email\n";
+        }
+
+        if (empty($message))
+        {
+            $messageError = "Il faut compléter votre message ! ";
+            $isSuccess = false;
+        }
+        else
+        {
+            $emailText .= "Message: $message\n";
+        }
+      
+        if (!isEmail($email))
+        {
+            $emailError = "votre email n'est pas valide";
+            $isSuccess = false;
+        }     
+
+        if ($isSuccess)
+        {
+            //envoi de l'email
+            $headers = "From : $firstname $name <$email> \r\n Reply-To : $email";
+            mail($emailTo, "demande de contact", $emailText, $headers);
+            $firstname = $name = $email = $message = "";
+        }
+    }
+
+    function isEmail($var)
+    {
+        return filter_var($var, FILTER_VALIDATE_EMAIL);
+    }
+
+    function verifyInput($var)
+    {
+        $var = trim($var);
+        $var = stripcslashes($var);
+        $var = htmlspecialchars($var);
+        return $var;
+    }
+?>
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -177,16 +261,51 @@
             </div>
         </div>
       </section>   
-      
+       
       <section class="m-3 pt-3 pb-3 border border-dark text-light rounded-3" style="background-color: #787676;">
-        
+        <h2 class="text-uppercase text-center">Me contacter</h2>
         <div class="container-fluid mx-2">
+        <p class="mx-3 mb-4">Mon profil vous intéresse ? N'hésitez pas à me contacter pour plus de précisions sur mon parcours et mes compétences.</p>
+        <div class="row">
+        <form action="<?php echo htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" role="form" >
             <div class="row">
-            <h2 class="text-uppercase text-center">Mon profil vous intéresse ?</h2> 
-            <p class="text-center">N'hésitez pas à me contacter pour plus de précisions sur mon parcours et mes compétences.</p>
-            <div class="d-flex justify-content-center">
-            <a href="mailto:heisenberg@gmail.com" class="col-3 d-flex justify-content-center btn btn-primary">Contactez-moi !</a>
+            
+            <div class="col-sm-6 mb-3 ">
+              <label for="firstname">Prénom *</label>
+              <input type="text" id="firstname" name="firstname" required class="form-control" placeholder="Votre prénom" value="<?php echo $firstname?>">
+              <p> <?php echo $firstnameError?></p>
             </div>
+            
+            <div class="col-sm-6 mb-3 ">
+                <label for="name">Nom *</label>
+                <input type="text" id="name" name="name" required class="form-control" placeholder="Votre nom" value="<?php echo $name?>" >
+                <p> <?php echo $nameError?></p>
+            </div>
+            
+            <div class="col-sm-6 mb-3 ">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" required class="form-control" placeholder="Votre Email" value="<?php echo $email?>" >
+                <p> <?php echo $emailError?></p>
+              </div>
+
+                 
+            <div class="col-sm-12 ">
+                <label for="phone">Votre message *</label>
+                <textarea type="text" id="message" name="message" required class="form-control" placeholder="Votre message" row="4" value="<?php echo $message?>"> </textarea>
+                <p> <?php echo $messageError?></p>
+            </div>
+            
+            <div class="col-sm-12 ">
+                <p style="font-weight: bold; font-style: italic;">* Ces informations sont requises.</p>
+            </div>
+            
+            <div class="col-sm-12 mb-3 ">
+                <input type="submit" class="btn btn-success btn-outline-light" value="Envoyer">
+            </div>
+
+        <p style="display:<?php if ($isSuccess) echo 'block'; else echo 'none';?>"> Votre message a bien été envoyé ! Merci de m'avoir contacté </p>
+            
+        </form>
         </div>
         </div>
     </section> 

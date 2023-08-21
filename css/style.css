@@ -19,13 +19,13 @@ ul.timeline-body{
 }
 
 .timeline {
-    padding: 30px 10px;
+    padding: 20px 20px 0px 20px; /* top right bottom left */ 
     position : relative;
 }
 
 .timeline:before{
     content: "";
-    top: 0;
+    top: 0px;
     bottom : 0;
     position : absolute;
     width: 3px;
